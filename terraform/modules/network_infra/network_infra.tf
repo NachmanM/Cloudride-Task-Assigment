@@ -12,7 +12,7 @@ resource "aws_subnet" "public" {
   cidr_block        = "10.0.${count.index}.0/24"
   availability_zone = data.aws_availability_zones.available.names[count.index]
   tags = {
-    Name = "${var.env}-public-subnet"
+    Name = "${var.resource_name}-public-subnet"
   }
 }
 
@@ -22,7 +22,7 @@ resource "aws_subnet" "private" {
   cidr_block        = "10.0.${count.index + 2}.0/24"
   availability_zone = data.aws_availability_zones.available.names[count.index]
   tags = {
-    Name = "${var.env}-private-subnet"
+    Name = "${var.resource_name}-private-subnet"
   }
 }
 
@@ -47,7 +47,7 @@ resource "aws_route_table" "public" {
         gateway_id = aws_internet_gateway.main.id
     }
     tags = {
-        Name = "${var.env}-rt-public"
+        Name = "${var.resource_name}-rt-public"
     }
 }
 
@@ -58,7 +58,7 @@ resource "aws_route_table" "private" {
         gateway_id = aws_nat_gateway.main.id
     }
     tags = {
-        Name = "${var.env}-rt-private"
+        Name = "${var.resource_name}-rt-private"
     }
 }
 

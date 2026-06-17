@@ -31,3 +31,8 @@ variable "allowed_protocols_sg" {
         -1 = "icmp" # -1 means all ports
     }
 }
+
+variable "resource_name" {
+    type = string
+    default = "default_resource_name"
+}

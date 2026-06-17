@@ -23,5 +23,5 @@ resource "aws_ecs_task_definition" "main" {
 }
 
 resource "aws_ecs_cluster" "main" {
-  name = "${var.env}-${var.project_name}"
+  name = "${local.resource_name}"
 }
