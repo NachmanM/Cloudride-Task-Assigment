@@ -31,8 +31,3 @@ variable "allowed_protocols_sg" {
         -1 = "icmp" # -1 means all ports
     }
 }
-
-variable "project_name" {
-    type = string
-    default = "default_project_name"
-}

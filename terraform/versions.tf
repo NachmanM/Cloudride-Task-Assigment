@@ -16,7 +16,7 @@ provider "aws" {
     tags = {
       ManagedBy = "NachmanTerraform"
       env       = var.env
-      Name      = "DefaultNachmanName-${var.env}"
+      Name      = "${var.project_name}-${var.env}"
     }
   }
 }
