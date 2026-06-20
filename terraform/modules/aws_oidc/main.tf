@@ -124,8 +124,7 @@ resource "aws_iam_policy" "github_ecs_deploy_policy" {
           "ecs:UpdateService",
           "ecs:DescribeServices"
         ]
-        # Restrict to your specific ECS service ARN for security alignment
-        Resource = "arn:aws:ecs:us-east-1:753392824297:cluster/prod-default-project-name"
+        Resource = "arn:aws:ecs:us-east-1:753392824297:service/prod-default-project-name/*"
       },
       {
         Sid    = "ECSTaskDefinitionManagement"
@@ -159,6 +158,88 @@ resource "aws_iam_policy" "github_ecs_deploy_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "attach_ecs_deploy" {
-  role       = aws_iam_role.github_actions_ecr.name 
+  role       = aws_iam_role.github_actions_ecr.name
   policy_arn = aws_iam_policy.github_ecs_deploy_policy.arn
+}
+
+resource "aws_iam_policy" "github_tf_read_policy" {
+  name        = "github-actions-tf-read-policy"
+  description = "Read-only permissions for Terraform state refresh across all managed resources"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "EC2ReadForTerraformRefresh"
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeAddresses",
+          "ec2:DescribeAvailabilityZones",
+          "ec2:DescribeInternetGateways",
+          "ec2:DescribeNatGateways",
+          "ec2:DescribeRouteTables",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeSecurityGroupRules",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeVpcAttribute",
+          "ec2:DescribeVpcs"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "IAMReadForTerraformRefresh"
+        Effect = "Allow"
+        Action = [
+          "iam:GetOpenIDConnectProvider",
+          "iam:GetPolicy",
+          "iam:GetPolicyVersion",
+          "iam:GetRole",
+          "iam:ListAttachedRolePolicies",
+          "iam:ListInstanceProfilesForRole",
+          "iam:ListRolePolicies"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "ELBReadForTerraformRefresh"
+        Effect = "Allow"
+        Action = [
+          "elasticloadbalancing:DescribeListenerAttributes",
+          "elasticloadbalancing:DescribeListeners",
+          "elasticloadbalancing:DescribeLoadBalancerAttributes",
+          "elasticloadbalancing:DescribeLoadBalancers",
+          "elasticloadbalancing:DescribeRules",
+          "elasticloadbalancing:DescribeTags",
+          "elasticloadbalancing:DescribeTargetGroupAttributes",
+          "elasticloadbalancing:DescribeTargetGroups"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "ECSAndECRReadForTerraformRefresh"
+        Effect = "Allow"
+        Action = [
+          "ecs:DescribeClusters",
+          "ecs:ListTagsForResource",
+          "ecr:DescribeRepositories"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "CloudWatchLogsReadForTerraformRefresh"
+        Effect = "Allow"
+        Action = [
+          "logs:DescribeLogGroups",
+          "logs:ListTagsForResource",
+          "logs:ListTagsLogGroup"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_tf_read" {
+  role       = aws_iam_role.github_actions_ecr.name
+  policy_arn = aws_iam_policy.github_tf_read_policy.arn
 }
