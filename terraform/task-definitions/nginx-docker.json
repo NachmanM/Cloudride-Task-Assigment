@@ -1,6 +1,6 @@
 [{
       "name": "hello-world-nachman",
-      "image": "753392824297.dkr.ecr.us-east-1.amazonaws.com/prod-default-project-name:latest",
+      "image": "753392824297.dkr.ecr.us-east-1.amazonaws.com/prod-default-project-name:9fefeeb8f9b7e1d59273448ccabd91de2dab1125",
       "essential": true,
       "portMappings": [
         {

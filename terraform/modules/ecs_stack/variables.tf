@@ -21,3 +21,11 @@ variable "target_group_arn" {
   type        = string
   description = "Connects ecs tasks to alb"
 }
+
+variable "region" {
+  type = string
+}
+
+variable "image_tag" {
+  type = string
+}

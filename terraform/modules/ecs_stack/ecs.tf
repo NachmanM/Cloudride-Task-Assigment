@@ -20,7 +20,30 @@ resource "aws_ecs_task_definition" "main" {
   runtime_platform {
     operating_system_family = "LINUX"
   }
-  container_definitions = file("task-definitions/nginx-docker.json")
+  container_definitions = jsonencode([
+  {
+    name      = "hello-world-nachman"
+    image     = "${aws_ecr_repository.main.repository_url}:${var.image_tag}"
+    essential = true
+    
+    portMappings = [
+      {
+        containerPort = 80
+        hostPort      = 80
+        protocol      = "tcp"
+      }
+    ]
+    
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.ecs.name
+        "awslogs-region"        = var.region
+        "awslogs-stream-prefix" = "ecs"
+      }
+    }
+  }
+])
 }
 
 resource "aws_ecs_cluster" "main" {

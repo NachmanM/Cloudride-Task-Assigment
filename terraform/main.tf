@@ -26,6 +26,9 @@ module "ecs_stack" {
   private_subnet_ids    = local.private_subnet_ids
   tasks_security_groups = local.security_group_tasks
   target_group_arn      = local.target_group_arn
+  
+  region = var.region
+  image_tag = var.image_tag
 }
 
 module "alb" {
