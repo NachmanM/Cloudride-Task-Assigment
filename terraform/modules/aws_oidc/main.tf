@@ -131,10 +131,10 @@ resource "aws_iam_policy" "github_ecs_deploy_policy" {
         Effect = "Allow"
         Action = [
           "ecs:RegisterTaskDefinition",
-          "ecs:DescribeTaskDefinition"
+          "ecs:DescribeTaskDefinition",
+          "ecs:DeregisterTaskDefinition"
         ]
-        # RegisterTaskDefinition requires "*" because task definitions are globally scoped family names
-        Resource = "*" 
+        Resource = "*"
       },
       {
         Sid    = "PassExecutionRole"
