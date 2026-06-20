@@ -89,7 +89,7 @@ resource "aws_iam_policy" "github_tf_backend_policy" {
         Action = [
             "s3:*"
         ]
-        Resource = "arn:aws:s3:::state-prod-default-project-name"
+        Resource = "arn:aws:s3:::${var.state_bucket_arn}"
       },
       {
         Sid    = "ReadWriteStateAndLocks"
@@ -99,7 +99,7 @@ resource "aws_iam_policy" "github_tf_backend_policy" {
           "s3:PutObject",
           "s3:DeleteObject"
         ]
-        Resource = "arn:aws:s3:::state-prod-default-project-name/*"
+        Resource = "arn:aws:s3:::${var.state_bucket_arn}/*"
       }
     ]
   })
