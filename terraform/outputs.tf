@@ -21,3 +21,8 @@ output "security_group_alb" {
 output "ecr_repo_url" {
   value = module.ecs_stack.ecr_url
 }
+
+output "oidc_iam_role" {
+  value = module.aws_oidc.target_iam_role_arn
+  description = "Copy this exact string into your GitHub YAML file"
+}

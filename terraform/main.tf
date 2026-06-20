@@ -9,6 +9,10 @@ module "network_infra" {
   resource_name            = local.resource_name
 }
 
+module "aws_oidc" {
+  source = "./modules/aws_oidc"
+}
+
 module "ecs_stack" {
   source                = "./modules/ecs_stack"
   resource_name         = local.resource_name
