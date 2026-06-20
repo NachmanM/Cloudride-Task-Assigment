@@ -66,4 +66,5 @@ variable "bucket_name" {
 variable "image_tag" {
   type = string
   description = "The image tag gh action will push to ecr and update task definition"
+  default = "latest"
 }
