@@ -1,6 +1,6 @@
 [{
-      "name": "hello-world-nachman",
-      "image": "753392824297.dkr.ecr.us-east-1.amazonaws.com/prod-default-project-name:latest",
+      "name": "{{ name }}",
+      "image": "{{ repo_url }}:latest",
       "essential": true,
       "portMappings": [
         {
@@ -12,8 +12,8 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/prod-default-project-name",
-          "awslogs-region": "us-east-1",
+          "awslogs-group": "{{ cloudwatch_log_group }}",
+          "awslogs-region": "{{ region }}",
           "awslogs-stream-prefix": "ecs"
         }
       }
