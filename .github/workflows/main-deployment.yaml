@@ -34,4 +34,7 @@ jobs:
           ECR_REGISTRY: 753392824297.dkr.ecr.us-east-1.amazonaws.com
           ECR_REPOSITORY: prod-default-project-name
           IMAGE_TAG: ${{ github.sha }}
-        run: ./.github/scripts/push-ecr.sh $IMAGE_TAG 
+        run: | 
+          
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG nginx-docker
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
