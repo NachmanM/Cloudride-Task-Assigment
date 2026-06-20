@@ -88,7 +88,8 @@ resource "aws_iam_policy" "github_tf_backend_policy" {
         Effect = "Allow"
         Action = [
           "s3:ListBucket",
-          "s3:GetBucketLocation"
+          "s3:GetBucketLocation",
+          "s3:GetBucketPolicy"
         ]
         Resource = "arn:aws:s3:::state-prod-default-project-name"
       },
@@ -98,8 +99,7 @@ resource "aws_iam_policy" "github_tf_backend_policy" {
         Action = [
           "s3:GetObject",
           "s3:PutObject",
-          "s3:DeleteObject",
-          "s3:GetBucketPolicy"
+          "s3:DeleteObject"
         ]
         Resource = "arn:aws:s3:::state-prod-default-project-name/*"
       }
