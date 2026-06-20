@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   deploy:
-    name: Build docker image
+    name: Push docker image
     runs-on: ubuntu-latest
     environment: prod
     steps:
@@ -28,3 +28,10 @@ jobs:
       - name: Login to AWS ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, Tag, and Push Docker image to Amazon ECR
+        env:
+          ECR_REGISTRY: 753392824297.dkr.ecr.us-east-1.amazonaws.com
+          ECR_REPOSITORY: prod-default-project-name
+          IMAGE_TAG: ${{ github.sha }}
+        run: ./.github/scripts/push-ecr.sh $IMAGE_TAG
