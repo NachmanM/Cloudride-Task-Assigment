@@ -1,6 +1,6 @@
 [{
       "name": "{{ name }}",
-      "image": "{{ repo_url }}:latest",
+      "image": "{{ repo_url }}:{{ image_tag }}",
       "essential": true,
       "portMappings": [
         {
