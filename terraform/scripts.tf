@@ -10,6 +10,7 @@ resource "terraform_data" "replace_task_definition_json_script" {
       repo_url             = module.ecs_stack.ecr_url
       cloudwatch_log_group = module.ecs_stack.cloudwatch_log_group
       region               = var.region
+      image_tag            = var.image_tag
     }
   }
 }

@@ -43,7 +43,7 @@ jobs:
           terraform_version: 1.7.5
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform -chdir=terraform init
 
       - name: Terraform apply
-        run: terraform apply -auto-approve -no-color
+        run: terraform -chdir=terraform apply -auto-approve -no-color -var="image_tag=${{ github.sha }}"

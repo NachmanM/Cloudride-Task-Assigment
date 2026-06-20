@@ -62,3 +62,8 @@ variable "bucket_name" {
   description = "the name of the state bucket" 
   default     = "state-prod-default-project-name"
 }
+
+variable "image_tag" {
+  type = string
+  description = "The image tag gh action will push to ecr and update task definition"
+}
