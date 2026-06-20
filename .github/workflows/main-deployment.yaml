@@ -1,0 +1,26 @@
+name: main-deployment
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    name: Build docker image
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+          audience: sts.amazonaws.com
+          role-to-assume: arn:aws:iam::753392824297:role/github-actions-ecr-runner-role
+          aws-region: us-east-1   
