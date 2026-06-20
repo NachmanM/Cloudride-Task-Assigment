@@ -87,31 +87,7 @@ resource "aws_iam_policy" "github_tf_backend_policy" {
         Sid    = "ListBucketForTerraform"
         Effect = "Allow"
         Action = [
-            "s3:GetBucketAcl",
-            "s3:GetBucketCORS",
-            "s3:GetBucketLocation",
-            "s3:GetBucketLogging",
-            "s3:GetBucketNotification",
-            "s3:GetBucketPolicy",
-            "s3:GetBucketRequestPayment",
-            "s3:GetBucketTagging",
-            "s3:GetBucketVersioning",
-            "s3:GetBucketWebsite",
-            "s3:GetEncryptionConfiguration",
-            "s3:GetLifecycleConfiguration",
-            "s3:GetObjectAttributes",
-            "s3:ListBucket",
-
-            # Modification Actions (Allows Terraform to update the bucket attributes)
-            "s3:PutBucketCORS",
-            "s3:PutBucketTagging",
-            "s3:PutBucketVersioning",
-            "s3:PutEncryptionConfiguration",
-            "s3:PutLifecycleConfiguration",
-            
-            # Required if your module contains the aws_s3_bucket_public_access_block resource
-            "s3:PutBucketPublicAccessBlock",
-            "s3:GetBucketPublicAccessBlock"
+            "s3:*"
         ]
         Resource = "arn:aws:s3:::state-prod-default-project-name"
       },
