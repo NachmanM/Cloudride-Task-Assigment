@@ -19,7 +19,7 @@ terraform {
 
 provider "aws" {
   region  = var.region
-  profile = "cloudride" # Set in ~/.aws/credentials
+  # profile = "cloudride" # Set in ~/.aws/credentials
   default_tags {
     tags = {
       ManagedBy = "NachmanTerraform"
