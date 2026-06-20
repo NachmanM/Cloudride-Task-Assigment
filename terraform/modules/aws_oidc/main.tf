@@ -174,6 +174,7 @@ resource "aws_iam_policy" "github_tf_read_policy" {
         Effect = "Allow"
         Action = [
           "ec2:DescribeAddresses",
+          "ec2:DescribeAddressesAttribute",
           "ec2:DescribeAvailabilityZones",
           "ec2:DescribeInternetGateways",
           "ec2:DescribeNatGateways",
