@@ -222,7 +222,8 @@ resource "aws_iam_policy" "github_tf_read_policy" {
         Action = [
           "ecs:DescribeClusters",
           "ecs:ListTagsForResource",
-          "ecr:DescribeRepositories"
+          "ecr:DescribeRepositories",
+          "ecr:ListTagsForResource"
         ]
         Resource = "*"
       },
