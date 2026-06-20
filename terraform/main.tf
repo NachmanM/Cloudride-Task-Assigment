@@ -9,6 +9,11 @@ module "network_infra" {
   resource_name            = local.resource_name
 }
 
+module "s3_state" {
+  source        = "./modules/s3_state"
+  bucket_name   = var.bucket_name
+}
+
 module "aws_oidc" {
   source = "./modules/aws_oidc"
 }
@@ -19,7 +24,7 @@ module "ecs_stack" {
   desired_task_count    = var.desired_task_count
   private_subnet_ids    = local.private_subnet_ids
   tasks_security_groups = local.security_group_tasks
-  target_group_arn      = local.target_group_arn 
+  target_group_arn      = local.target_group_arn
 }
 
 module "alb" {
@@ -30,7 +35,7 @@ module "alb" {
   subnets = local.public_subnet_ids
 
   create_security_group = false
-  security_groups = [local.security_group_alb]
+  security_groups       = [local.security_group_alb]
 
 
   listeners = {
@@ -42,13 +47,13 @@ module "alb" {
       }
     }
   }
-    
+
   target_groups = {
     ecs_tasks = {
-      name_prefix      = "ecs-"
-      protocol         = "HTTP"
-      port             = 80
-      target_type      = "ip"
+      name_prefix       = "ecs-"
+      protocol          = "HTTP"
+      port              = 80
+      target_type       = "ip"
       create_attachment = false
     }
   }

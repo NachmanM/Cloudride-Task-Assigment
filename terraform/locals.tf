@@ -6,7 +6,7 @@ locals {
   public_subnet_ids  = module.network_infra.public_subnets
 
   security_group_tasks = module.network_infra.security_group_tasks
-  security_group_alb = module.network_infra.security_group_alb
+  security_group_alb   = module.network_infra.security_group_alb
 
 
   target_group_arn = module.alb.target_groups["ecs_tasks"].arn

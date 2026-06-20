@@ -86,11 +86,11 @@ resource "aws_security_group" "tasks" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "tasks_ipv4" {
-  for_each          = var.allowed_protocols_sg
-  security_group_id = aws_security_group.tasks.id
-  from_port         = each.key
-  ip_protocol       = each.value
-  to_port           = each.key
+  for_each                     = var.allowed_protocols_sg
+  security_group_id            = aws_security_group.tasks.id
+  from_port                    = each.key
+  ip_protocol                  = each.value
+  to_port                      = each.key
   referenced_security_group_id = aws_security_group.alb.id
 }
 

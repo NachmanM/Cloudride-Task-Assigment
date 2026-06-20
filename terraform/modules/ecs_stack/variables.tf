@@ -18,6 +18,6 @@ variable "tasks_security_groups" {
 }
 
 variable "target_group_arn" {
-  type = string
+  type        = string
   description = "Connects ecs tasks to alb"
 }

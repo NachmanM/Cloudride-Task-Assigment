@@ -43,8 +43,8 @@ resource "aws_ecs_service" "main" {
   load_balancer {
     # Reference the target group ARN from the ALB module output maps
     target_group_arn = var.target_group_arn
-    container_name   = "hello-world-nachman" 
-    container_port   = 80     
+    container_name   = "hello-world-nachman"
+    container_port   = 80
   }
 
   force_new_deployment = true

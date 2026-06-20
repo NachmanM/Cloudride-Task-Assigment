@@ -56,3 +56,9 @@ variable "desired_task_count" {
   type        = number
   default     = 2
 }
+
+variable "bucket_name" {
+  type        = string
+  description = "the name of the state bucket" 
+  default     = "state-prod-default-project-name"
+}

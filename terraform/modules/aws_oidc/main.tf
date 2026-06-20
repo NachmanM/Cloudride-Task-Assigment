@@ -4,8 +4,8 @@ import {
 }
 
 resource "aws_iam_openid_connect_provider" "github" {
-  url             = "https://token.actions.githubusercontent.com"
-  client_id_list  = ["sts.amazonaws.com"]
+  url            = "https://token.actions.githubusercontent.com"
+  client_id_list = ["sts.amazonaws.com"]
 
   lifecycle {
     prevent_destroy = true
@@ -74,4 +74,92 @@ resource "aws_iam_policy" "ecr_push_policy" {
 resource "aws_iam_role_policy_attachment" "attach_ecr" {
   role       = aws_iam_role.github_actions_ecr.name
   policy_arn = aws_iam_policy.ecr_push_policy.arn
+}
+
+resource "aws_iam_policy" "github_tf_backend_policy" {
+  name        = "github-actions-tf-backend-policy"
+  description = "Allows GitHub Actions to read and write Terraform state to S3"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "ListBucketForTerraform"
+        Effect = "Allow"
+        Action = [
+          "s3:ListBucket",
+          "s3:GetBucketLocation"
+        ]
+        Resource = "arn:aws:s3:::state-prod-default-project-name"
+      },
+      {
+        Sid    = "ReadWriteStateAndLocks"
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ]
+        Resource = "arn:aws:s3:::state-prod-default-project-name/*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_backend_policy" {
+  role       = aws_iam_role.github_actions_ecr.name
+  policy_arn = aws_iam_policy.github_tf_backend_policy.arn
+}
+
+resource "aws_iam_policy" "github_ecs_deploy_policy" {
+  name        = "github-actions-ecs-deploy-policy"
+  description = "Allows GitHub Actions to register task definitions and update ECS services"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "ECSUpdateService"
+        Effect = "Allow"
+        Action = [
+          "ecs:UpdateService",
+          "ecs:DescribeServices"
+        ]
+        # Restrict to your specific ECS service ARN for security alignment
+        Resource = "arn:aws:ecs:us-east-1:753392824297:cluster/prod-default-project-name"
+      },
+      {
+        Sid    = "ECSTaskDefinitionManagement"
+        Effect = "Allow"
+        Action = [
+          "ecs:RegisterTaskDefinition",
+          "ecs:DescribeTaskDefinition"
+        ]
+        # RegisterTaskDefinition requires "*" because task definitions are globally scoped family names
+        Resource = "*" 
+      },
+      {
+        Sid    = "PassExecutionRole"
+        Effect = "Allow"
+        Action = [
+          "iam:PassRole"
+        ]
+        # The runner needs permission to pass your ECS Execution/Task roles to the ECS service
+        Resource = [
+          "arn:aws:iam::753392824297:role/cloudride-challenge-app-ecsTaskExecutionRole",
+          "arn:aws:iam::753392824297:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
+        ]
+        Condition = {
+          StringEquals = {
+            "iam:PassedToService" = "ecs-tasks.amazonaws.com"
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_ecs_deploy" {
+  role       = aws_iam_role.github_actions_ecr.name 
+  policy_arn = aws_iam_policy.github_ecs_deploy_policy.arn
 }
