@@ -132,7 +132,8 @@ resource "aws_iam_policy" "github_ecs_deploy_policy" {
         Action = [
           "ecs:RegisterTaskDefinition",
           "ecs:DescribeTaskDefinition",
-          "ecs:DeregisterTaskDefinition"
+          "ecs:DeregisterTaskDefinition",
+          "ecs:TagResource"
         ]
         Resource = "*"
       },

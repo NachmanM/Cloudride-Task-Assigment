@@ -40,10 +40,16 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.15.6
+          terraform_version: 1.
 
       - name: Terraform Init
         run: terraform -chdir=terraform init
 
       - name: Terraform apply
-        run: terraform -chdir=terraform apply -auto-approve -no-color -var="image_tag=${{ github.sha }}"
+        run: | 
+          terraform -chdir=terraform apply \ 
+          -auto-approve \ 
+          -no-color \ 
+          -var="image_tag=${{ github.sha }}" \
+          -target=module.ecs_stack.aws_ecs_task_definition.main \
+          -target=module.ecs_stack.aws_ecs_service.main 
