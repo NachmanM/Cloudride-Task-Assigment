@@ -98,7 +98,8 @@ resource "aws_iam_policy" "github_tf_backend_policy" {
         Action = [
           "s3:GetObject",
           "s3:PutObject",
-          "s3:DeleteObject"
+          "s3:DeleteObject",
+          "s3:GetBucketPolicy"
         ]
         Resource = "arn:aws:s3:::state-prod-default-project-name/*"
       }
