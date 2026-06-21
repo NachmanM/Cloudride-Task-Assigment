@@ -237,6 +237,32 @@ resource "aws_iam_policy" "github_tf_read_policy" {
           "logs:ListTagsLogGroup"
         ]
         Resource = "*"
+      },
+      {
+        Sid    = "ServiceDiscoveryReadForTerraformRefresh"
+        Effect = "Allow"
+        Action = [
+          "servicediscovery:GetNamespace",
+          "servicediscovery:ListTagsForResource"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "AppAutoScalingReadForTerraformRefresh"
+        Effect = "Allow"
+        Action = [
+          "application-autoscaling:DescribeScalableTargets",
+          "application-autoscaling:DescribeScalingPolicies"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "ECSDescribeServicesForRefresh"
+        Effect = "Allow"
+        Action = [
+          "ecs:DescribeServices"
+        ]
+        Resource = "*"
       }
     ]
   })

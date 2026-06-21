@@ -26,7 +26,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v6.1.0
         with:
           audience: sts.amazonaws.com
-          role-to-assume: arn:aws:iam::753392824297:role/github-actions-ecr-runner-role
+          role-to-assume: arn:aws:iam::753392824297:role/prod-github-actions-ecr-runner-role
           aws-region: us-east-1   
 
       - name: Login to AWS ECR
