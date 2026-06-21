@@ -60,7 +60,22 @@ jobs:
       - name: Select Terraform workspace
         run: terraform -chdir=terraform workspace select prod || terraform -chdir=terraform workspace new prod
 
-      - name: Terraform Plan
+      - name: Terraform Plan - Build images
+        run: |
+          terraform -chdir=terraform plan \
+            -no-color \
+            -var="image_tag=${{ github.sha }}" \
+            -target=terraform_data.build_and_push_images \
+            -out=prod-build.tfplan
+
+      - name: Terraform Apply - Build images
+        run: |
+          terraform -chdir=terraform apply \
+            -auto-approve \
+            -no-color \
+            prod-build.tfplan
+
+      - name: Terraform Plan - Deploy ECS
         run: |
           terraform -chdir=terraform plan \
             -no-color \
@@ -68,13 +83,12 @@ jobs:
             -target=module.ecs_stack.aws_ecs_task_definition.main \
             -target=module.ecs_stack.aws_ecs_service.main \
             -out=prod.tfplan
-      - name: Terraform apply
+
+      - name: Terraform Apply - Deploy ECS
         run: |
           terraform -chdir=terraform apply \
             -auto-approve \
             -no-color \
-            -target=module.ecs_stack.aws_ecs_task_definition.main \
-            -target=module.ecs_stack.aws_ecs_service.main \
             prod.tfplan
 
       - name: Print ALB DNS name
