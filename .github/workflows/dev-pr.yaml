@@ -68,3 +68,6 @@ jobs:
             -target=module.ecs_stack.aws_ecs_task_definition.main \
             -target=module.ecs_stack.aws_ecs_service.main \
             dev.tfplan
+
+      - name: Print ALB DNS name
+        run: terraform -chdir=terraform output -raw alb_dns_name

@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "main" {
-  name                 = var.service_name
+  name                 = "${var.resource_name}-${var.service_name}"
   image_tag_mutability = "IMMUTABLE_WITH_EXCLUSION"
 
   image_tag_mutability_exclusion_filter {
@@ -99,7 +99,7 @@ resource "aws_ecs_service" "main" {
 }
 
 resource "aws_cloudwatch_log_group" "ecs" {
-  name              = "/ecs/${var.service_name}"
+  name              = "/ecs/${var.resource_name}-${var.service_name}"
   retention_in_days = 30
 }
 

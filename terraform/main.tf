@@ -17,6 +17,7 @@ module "s3_state" {
 module "aws_oidc" {
   source           = "./modules/aws_oidc"
   state_bucket_arn = module.s3_state.state_bucket_arn
+  env              = local.env
 }
 
 module "ecs_cluster_wide" {

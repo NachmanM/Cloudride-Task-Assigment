@@ -30,3 +30,8 @@ output "oidc_iam_role" {
 output "state_bucket_name" {
   value = module.s3_state.state_bucket_name
 }
+
+output "alb_dns_name" {
+  value       = module.alb.dns_name
+  description = "ALB DNS name — use this as the app endpoint"
+}

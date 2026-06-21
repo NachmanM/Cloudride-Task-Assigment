@@ -278,19 +278,20 @@ Each concern is isolated into its own module:
 git clone https://github.com/NachmanM/<repo-name>
 cd <repo-name>
 
-# Run the bootstrap script
-# This initializes Terraform with a local backend, imports the existing OIDC provider,
-# provisions all infrastructure, then migrates state to S3
+# Run the bootstrap script — provisions both dev and prod environments
 ./init.sh
 ```
 
-The `init.sh` script:
-1. Bootstraps Terraform with a local state backend
-2. Imports the existing GitHub OIDC provider from AWS
-3. Applies the full infrastructure (VPC, ALB, ECS, ECR, etc.)
-4. Migrates state to the S3 backend
-5. Selects (or creates) the `prod` Terraform workspace
-6. Runs a final `terraform apply` in the correct workspace
+The `init.sh` script runs four sequential phases:
+
+| Phase | Backend | Workspace | Action |
+|---|---|---|---|
+| 1 | local | `dev` | Imports the GitHub OIDC provider; provisions all infra (VPC, ALB, ECS, ECR, S3 state bucket) |
+| 2 | s3 | `dev` | Migrates the local state into the S3 remote backend |
+| 3 | s3 | `dev` | Confirms dev state is consistent after migration |
+| 4 | s3 | `prod` | Imports the GitHub OIDC provider into the prod workspace; provisions all prod infra |
+
+The local-backend phase is required to create the S3 state bucket before it can be used as a backend. Both `dev` and `prod` environments share the same S3 bucket (`state-prod-default-project-name`) but store isolated state files under separate workspace paths (`env:/dev/…` and `env:/prod/…`).
 
 ### Teardown
 
@@ -298,7 +299,13 @@ The `init.sh` script:
 ./destroy.sh
 ```
 
-Destroys all provisioned resources while preserving the GitHub OIDC provider so the IAM trust relationship remains intact for future use.
+Destroys all provisioned resources across both environments while preserving the GitHub OIDC provider in each workspace so the IAM trust relationship stays intact for future use. The script runs in three phases:
+
+| Phase | Backend | Workspace | Action |
+|---|---|---|---|
+| 1 | s3 | `dev` | Destroys all dev infra except the OIDC provider and the shared S3 state bucket |
+| 2 | s3 → local | `prod` | Migrates prod state to local so the S3 bucket is no longer the active backend |
+| 3 | local | `prod` | Destroys all prod infra including the S3 state bucket (`force_destroy = true`) |
 
 ### Deploying a Change
 
