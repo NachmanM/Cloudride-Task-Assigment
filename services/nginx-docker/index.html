@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello from Nachman!!!</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: 40px auto; padding: 0 20px; background: #f5f5f5; }
+    h1 { color: #232f3e; }
+    .card { background: white; border-radius: 8px; padding: 20px; margin: 16px 0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .card h2 { margin-top: 0; font-size: 1rem; color: #555; text-transform: uppercase; letter-spacing: 0.05em; }
+    pre { background: #f0f0f0; padding: 12px; border-radius: 4px; overflow: auto; font-size: 0.9rem; }
+    button { margin-top: 12px; padding: 8px 16px; background: #ff9900; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+    button:hover { background: #e68a00; }
+    .error { color: #c0392b; }
+  </style>
+</head>
+<body>
+  <h1>Hello from Nachman!!</h1>
+
+  <div class="card">
+    <h2>GET /api/hello</h2>
+    <pre id="hello-result">Loading...</pre>
+  </div>
+
+  <div class="card">
+    <h2>GET /api/status</h2>
+    <pre id="status-result">Loading...</pre>
+    <button onclick="fetchAll()">Refresh</button>
+  </div>
+
+  <script>
+    async function fetchJson(path, elementId) {
+      try {
+        const res = await fetch(path);
+        const data = await res.json();
+        document.getElementById(elementId).textContent = JSON.stringify(data, null, 2);
+        document.getElementById(elementId).classList.remove('error');
+      } catch (e) {
+        document.getElementById(elementId).textContent = 'Error: ' + e.message;
+        document.getElementById(elementId).classList.add('error');
+      }
+    }
+
+    function fetchAll() {
+      fetchJson('${API_BASE_URL}/api/hello', 'hello-result');
+      fetchJson('${API_BASE_URL}/api/status', 'status-result');
+    }
+
+    fetchAll();
+  </script>
+</body>
+</html>

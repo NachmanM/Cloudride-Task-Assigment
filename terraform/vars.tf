@@ -59,12 +59,30 @@ variable "desired_task_count" {
 
 variable "bucket_name" {
   type        = string
-  description = "the name of the state bucket" 
+  description = "the name of the state bucket"
   default     = "state-prod-default-project-name"
 }
 
 variable "image_tag" {
-  type = string
+  type        = string
   description = "The image tag gh action will push to ecr and update task definition"
-  default = "latest"
+  default     = "latest"
+}
+
+variable "ecs_services" {
+  type = map(object({
+    desired_count  = number
+    min_tasks      = number
+    max_tasks      = number
+    cpu_percentage = number
+  }))
+  description = "Different ECS services that will be deployed in the cluster"
+  default = {
+    nginx-docker = {
+      desired_count  = 2
+      min_tasks      = 2
+      max_tasks      = 4
+      cpu_percentage = 60
+    }
+  }
 }

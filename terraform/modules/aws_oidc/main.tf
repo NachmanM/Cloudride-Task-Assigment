@@ -1,4 +1,4 @@
-import {
+﻿import {
   to = aws_iam_openid_connect_provider.github
   id = "arn:aws:iam::753392824297:oidc-provider/token.actions.githubusercontent.com"
 }
@@ -13,7 +13,7 @@ resource "aws_iam_openid_connect_provider" "github" {
 }
 
 resource "aws_iam_role" "github_actions_ecr" {
-  name = "github-actions-ecr-runner-role"
+  name = "${var.env}-github-actions-ecr-runner-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -39,7 +39,7 @@ resource "aws_iam_role" "github_actions_ecr" {
 }
 
 resource "aws_iam_policy" "ecr_push_policy" {
-  name        = "github-actions-ecr-push-policy"
+  name        = "${var.env}-github-actions-ecr-push-policy"
   description = "Granular permissions for pushing images to ECR"
 
   policy = jsonencode({
@@ -77,7 +77,7 @@ resource "aws_iam_role_policy_attachment" "attach_ecr" {
 }
 
 resource "aws_iam_policy" "github_tf_backend_policy" {
-  name        = "github-actions-tf-backend-policy"
+  name        = "${var.env}-github-actions-tf-backend-policy"
   description = "Allows GitHub Actions to read and write Terraform state to S3"
 
   policy = jsonencode({
@@ -87,7 +87,7 @@ resource "aws_iam_policy" "github_tf_backend_policy" {
         Sid    = "ListBucketForTerraform"
         Effect = "Allow"
         Action = [
-            "s3:*"
+          "s3:*"
         ]
         Resource = var.state_bucket_arn
       },
@@ -111,7 +111,7 @@ resource "aws_iam_role_policy_attachment" "attach_backend_policy" {
 }
 
 resource "aws_iam_policy" "github_ecs_deploy_policy" {
-  name        = "github-actions-ecs-deploy-policy"
+  name        = "${var.env}-github-actions-ecs-deploy-policy"
   description = "Allows GitHub Actions to register task definitions and update ECS services"
 
   policy = jsonencode({
@@ -164,7 +164,7 @@ resource "aws_iam_role_policy_attachment" "attach_ecs_deploy" {
 }
 
 resource "aws_iam_policy" "github_tf_read_policy" {
-  name        = "github-actions-tf-read-policy"
+  name        = "${var.env}-github-actions-tf-read-policy"
   description = "Read-only permissions for Terraform state refresh across all managed resources"
 
   policy = jsonencode({
@@ -235,6 +235,32 @@ resource "aws_iam_policy" "github_tf_read_policy" {
           "logs:DescribeLogGroups",
           "logs:ListTagsForResource",
           "logs:ListTagsLogGroup"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "ServiceDiscoveryReadForTerraformRefresh"
+        Effect = "Allow"
+        Action = [
+          "servicediscovery:GetNamespace",
+          "servicediscovery:ListTagsForResource"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "AppAutoScalingReadForTerraformRefresh"
+        Effect = "Allow"
+        Action = [
+          "application-autoscaling:DescribeScalableTargets",
+          "application-autoscaling:DescribeScalingPolicies"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "ECSDescribeServicesForRefresh"
+        Effect = "Allow"
+        Action = [
+          "ecs:DescribeServices"
         ]
         Resource = "*"
       }

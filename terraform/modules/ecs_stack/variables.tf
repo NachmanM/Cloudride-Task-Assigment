@@ -20,6 +20,7 @@ variable "tasks_security_groups" {
 variable "target_group_arn" {
   type        = string
   description = "Connects ecs tasks to alb"
+  default     = ""
 }
 
 variable "region" {
@@ -28,4 +29,32 @@ variable "region" {
 
 variable "image_tag" {
   type = string
+}
+
+variable "service_name" {
+  type = string
+}
+
+variable "min_tasks" {
+  type = number
+}
+
+variable "max_tasks" {
+  type = number
+}
+
+variable "cpu_percentage" {
+  type = number
+}
+
+variable "namespace_arn" {
+  type = string
+}
+
+variable "cluster_id" {
+  type = string
+}
+
+variable "env_vars" {
+  type = map(string)
 }
