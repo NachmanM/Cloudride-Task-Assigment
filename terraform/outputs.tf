@@ -19,7 +19,7 @@ output "security_group_alb" {
 }
 
 output "ecr_repo_url" {
-  value = module.ecs_stack.ecr_url
+  value = [for s in module.ecs_stack : s.ecr_url]
 }
 
 output "oidc_iam_role" {

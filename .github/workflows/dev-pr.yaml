@@ -1,6 +1,6 @@
-name: main-deployment
+name: dev-deployment
 on:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -12,7 +12,6 @@ jobs:
   deploy:
     name: Push docker image
     runs-on: ubuntu-latest
-    environment: prod
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
         with:
@@ -29,14 +28,6 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-    #   - name: Build, Tag, and Push Docker image to Amazon ECR
-    #     env:
-    #       ECR_REGISTRY: 753392824297.dkr.ecr.us-east-1.amazonaws.com
-    #       ECR_REPOSITORY: prod-default-project-name
-    #       IMAGE_TAG: ${{ github.sha }}
-    #     run: | 
-    #       docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG nginx-docker
-    #       docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -46,7 +37,7 @@ jobs:
         run: terraform -chdir=terraform init -backend-config=backend-configs/prod-backend.tfvars
       
       - name: Select Terraform workspace
-        run: terraform -chdir=terraform workspace select prod || terraform -chdir=terraform workspace new prod
+        run: terraform -chdir=terraform workspace select dev || terraform -chdir=terraform workspace new dev
 
       - name: Terraform Plan
         run: |
@@ -55,7 +46,8 @@ jobs:
             -var="image_tag=${{ github.sha }}" \
             -target=module.ecs_stack.aws_ecs_task_definition.main \
             -target=module.ecs_stack.aws_ecs_service.main \
-            -out=prod.tfplan
+            -out=dev.tfplan
+
       - name: Terraform apply
         run: |
           terraform -chdir=terraform apply \
@@ -63,4 +55,4 @@ jobs:
             -no-color \
             -target=module.ecs_stack.aws_ecs_task_definition.main \
             -target=module.ecs_stack.aws_ecs_service.main \
-            prod.tfplan
+            dev.tfplan

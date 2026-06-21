@@ -87,7 +87,7 @@ resource "aws_iam_policy" "github_tf_backend_policy" {
         Sid    = "ListBucketForTerraform"
         Effect = "Allow"
         Action = [
-            "s3:*"
+          "s3:*"
         ]
         Resource = var.state_bucket_arn
       },
