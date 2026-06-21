@@ -11,7 +11,13 @@ terraform {
 }
 EOF
 
-terraform $tf_dir init -migrate-state
+# If the S3 state file is accessible, migrate it to local. Otherwise reconfigure
+# fresh (bucket doesn't exist yet on a first-time run, or credentials aren't set up).
+if aws s3api head-object --bucket "state-prod-default-project-name" --key "nachman-state.tfstate" 2>/dev/null; then
+  terraform $tf_dir init -migrate-state
+else
+  terraform $tf_dir init -reconfigure
+fi
 
 terraform $tf_dir workspace select dev || terraform $tf_dir workspace new dev
 
