@@ -90,12 +90,6 @@ resource "aws_ecs_service" "main" {
   }
 
   force_new_deployment = true
-  triggers = {
-    redployment = plantimestamp()
-  }
-  lifecycle {
-    replace_triggered_by = [aws_ecs_task_definition.main]
-  }
 }
 
 resource "aws_cloudwatch_log_group" "ecs" {
