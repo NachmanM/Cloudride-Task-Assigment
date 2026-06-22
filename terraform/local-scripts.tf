@@ -12,6 +12,7 @@ resource "terraform_data" "build_and_push_images" {
       service_name = each.key
       repo_url     = module.ecs_stack[each.key].ecr_url
       image_tag    = var.image_tag
+      region       = var.region
     }
   }
 }

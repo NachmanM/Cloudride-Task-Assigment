@@ -5,3 +5,7 @@ variable "state_bucket_arn" {
 variable "env" {
   type = string
 }
+
+variable "resource_name" {
+  type = string
+}

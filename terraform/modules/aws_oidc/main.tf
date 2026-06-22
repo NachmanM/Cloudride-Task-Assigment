@@ -121,10 +121,12 @@ resource "aws_iam_policy" "github_ecs_deploy_policy" {
         Sid    = "ECSUpdateService"
         Effect = "Allow"
         Action = [
+          "ecs:CreateService",
           "ecs:UpdateService",
+          "ecs:DeleteService",
           "ecs:DescribeServices"
         ]
-        Resource = "arn:aws:ecs:us-east-1:753392824297:service/prod-default-project-name/*"
+        Resource = "arn:aws:ecs:us-east-1:753392824297:service/${var.resource_name}/*"
       },
       {
         Sid    = "ECSTaskDefinitionManagement"
@@ -134,6 +136,17 @@ resource "aws_iam_policy" "github_ecs_deploy_policy" {
           "ecs:DescribeTaskDefinition",
           "ecs:DeregisterTaskDefinition",
           "ecs:TagResource"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "AppAutoScalingWrite"
+        Effect = "Allow"
+        Action = [
+          "application-autoscaling:RegisterScalableTarget",
+          "application-autoscaling:DeregisterScalableTarget",
+          "application-autoscaling:PutScalingPolicy",
+          "application-autoscaling:DeleteScalingPolicy"
         ]
         Resource = "*"
       },
@@ -222,8 +235,10 @@ resource "aws_iam_policy" "github_tf_read_policy" {
         Effect = "Allow"
         Action = [
           "ecs:DescribeClusters",
+          "ecs:DescribeCapacityProviders",
           "ecs:ListTagsForResource",
           "ecr:DescribeRepositories",
+          "ecr:GetRepositoryPolicy",
           "ecr:ListTagsForResource"
         ]
         Resource = "*"
@@ -252,7 +267,8 @@ resource "aws_iam_policy" "github_tf_read_policy" {
         Effect = "Allow"
         Action = [
           "application-autoscaling:DescribeScalableTargets",
-          "application-autoscaling:DescribeScalingPolicies"
+          "application-autoscaling:DescribeScalingPolicies",
+          "application-autoscaling:ListTagsForResource"
         ]
         Resource = "*"
       },
