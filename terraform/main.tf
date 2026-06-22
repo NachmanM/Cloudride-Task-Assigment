@@ -56,7 +56,6 @@ module "alb" {
   security_groups            = [local.security_group_alb]
   enable_deletion_protection = false
 
-
   listeners = {
     http = {
       port     = 80
