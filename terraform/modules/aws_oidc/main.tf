@@ -140,6 +140,17 @@ resource "aws_iam_policy" "github_ecs_deploy_policy" {
         Resource = "*"
       },
       {
+        Sid    = "AppAutoScalingWrite"
+        Effect = "Allow"
+        Action = [
+          "application-autoscaling:RegisterScalableTarget",
+          "application-autoscaling:DeregisterScalableTarget",
+          "application-autoscaling:PutScalingPolicy",
+          "application-autoscaling:DeleteScalingPolicy"
+        ]
+        Resource = "*"
+      },
+      {
         Sid    = "PassExecutionRole"
         Effect = "Allow"
         Action = [
