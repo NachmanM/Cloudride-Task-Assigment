@@ -124,7 +124,7 @@ resource "aws_iam_policy" "github_ecs_deploy_policy" {
           "ecs:UpdateService",
           "ecs:DescribeServices"
         ]
-        Resource = "arn:aws:ecs:us-east-1:753392824297:service/prod-default-project-name/*"
+        Resource = "arn:aws:ecs:us-east-1:753392824297:service/${var.resource_name}/*"
       },
       {
         Sid    = "ECSTaskDefinitionManagement"

@@ -60,6 +60,8 @@ jobs:
             -target='module.ecs_stack["nginx-docker"].aws_ecs_service.main' \
             -target='module.ecs_stack["api-service"].aws_ecs_task_definition.main' \
             -target='module.ecs_stack["api-service"].aws_ecs_service.main' \
+            -target='terraform_data.build_and_push_images["nginx-docker"]' \
+            -target='terraform_data.build_and_push_images["api-service"]' \
             -out=dev.tfplan
 
       - name: Terraform apply
@@ -71,6 +73,8 @@ jobs:
             -target='module.ecs_stack["nginx-docker"].aws_ecs_service.main' \
             -target='module.ecs_stack["api-service"].aws_ecs_task_definition.main' \
             -target='module.ecs_stack["api-service"].aws_ecs_service.main' \
+            -target='terraform_data.build_and_push_images["nginx-docker"]' \
+            -target='terraform_data.build_and_push_images["api-service"]' \
             dev.tfplan
 
       - name: Print ALB DNS name
