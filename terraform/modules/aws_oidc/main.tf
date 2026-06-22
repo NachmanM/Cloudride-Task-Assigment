@@ -222,8 +222,10 @@ resource "aws_iam_policy" "github_tf_read_policy" {
         Effect = "Allow"
         Action = [
           "ecs:DescribeClusters",
+          "ecs:DescribeCapacityProviders",
           "ecs:ListTagsForResource",
           "ecr:DescribeRepositories",
+          "ecr:GetRepositoryPolicy",
           "ecr:ListTagsForResource"
         ]
         Resource = "*"
@@ -252,7 +254,8 @@ resource "aws_iam_policy" "github_tf_read_policy" {
         Effect = "Allow"
         Action = [
           "application-autoscaling:DescribeScalableTargets",
-          "application-autoscaling:DescribeScalingPolicies"
+          "application-autoscaling:DescribeScalingPolicies",
+          "application-autoscaling:ListTagsForResource"
         ]
         Resource = "*"
       },
